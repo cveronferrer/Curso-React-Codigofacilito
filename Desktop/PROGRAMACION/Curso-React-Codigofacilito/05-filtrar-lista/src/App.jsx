@@ -1,11 +1,11 @@
-import './App.css'
+import List from "./list/List"
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
     <div>
-      
+      <List />
     </div>
   )
 }
