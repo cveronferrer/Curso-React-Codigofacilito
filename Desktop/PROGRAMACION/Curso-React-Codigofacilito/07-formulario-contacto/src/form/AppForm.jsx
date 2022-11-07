@@ -8,7 +8,7 @@ function AppForm(){
         validate ={ values => {
             let errors ={};
             if(!values.name){
-                errors.name = 'Este ccampo es requerido';
+                errors.name = 'Este campo es requerido';
             } else if(!values.email){
                 errors.email = 'Este campo es requerido';
             } else if (
@@ -18,17 +18,38 @@ function AppForm(){
             }
             return errors;
         } }
+        onSubmit={
+            (values, {setSubmitting}) => {
+                //realizar una cuenta en formspree.com
+                //esto hace que el message se te envie a tu correo
+                let url = 'https://formspree.com/urlbrindada';
+                let formData = new FormData();
+                formData.append('name', values.name);
+                formData.append('email', values.email);
+                formData.append('message', values.message);
+
+                fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }).then(response => { setSubmitting(false);
+                    alert('Gracias por contactarse');
+                })
+            }
+        }
         >
             {
                 // ({isSubmiting}) => {
                 //     return();
                 // }
                 ({ isSubmitting, values }) => (
-                    <Form>
+                    <Form className='form'>
                         <div>
                             <label htmlFor="name">Nombre:</label>
                             <Field type="text" name="name"></Field>
-                            <ErrorMessage name='name' component='p'></ErrorMessage>
+                            <ErrorMessage name='name' component='p' className='error-message'></ErrorMessage>
                         </div>
                         <div>
                             <label htmlFor="email">Correo Electronico:</label>
@@ -39,7 +60,9 @@ function AppForm(){
                             <label htmlFor="message">Mensaje:</label>
                             <Field component="textarea" value={values.message} name="message"></Field>
                         </div>
-                        <button>Enviar mensaje</button>
+                        <button type='submit' disabled={ isSubmitting }>
+                            {isSubmitting ? 'Enviando mensaje...' : 'Enviar mensaje'}
+                        </button>
 
                     </Form>
                 )
